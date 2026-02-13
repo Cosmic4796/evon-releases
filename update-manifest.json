@@ -1,29 +1,12 @@
-{
-  "version": "1.0.0",
-  "releaseDate": "2025-02-13",
-  "isCritical": false,
-  "changelog": [
-    {
-      "type": "feature",
-      "text": "Initial release of EVON Obfuscator"
-    },
-    {
-      "type": "feature",
-      "text": "Monaco Editor with Lua/Luau syntax highlighting"
-    },
-    {
-      "type": "feature",
-      "text": "3 obfuscation levels: Basic, Medium, Maximum"
-    },
-    {
-      "type": "feature",
-      "text": "Project folder support with file tree"
-    },
-    {
-      "type": "feature",
-      "text": "Customizable themes and settings"
-    }
-  ],
-  "downloadUrl": "https://github.com/YOUR_USERNAME/evon-releases/releases/latest/download/EVON-Setup.exe",
-  "minVersion": "1.0.0"
-}
+  {
+    "version": "1.0.0",
+    "releaseDate": "2025-02-13",
+    "isCritical": false,
+    "changelog": [
+      { "type": "feature", "text": "Initial release of EVON Obfuscator" },
+      { "type": "feature", "text": "Monaco Editor with Lua/Luau syntax highlighting" },
+      { "type": "feature", "text": "3 obfuscation levels" },
+      { "type": "feature", "text": "Auto-update system" }
+    ],
+    "downloadUrl": "https://github.com/Cosmic4796/evon-releases/releases/download/v1.0.0/EVON.Obfuscator_1.0.0_x64-setup.exe"
+  }
