@@ -1,93 +1,97 @@
-name: Discord Update Notification
+  name: Discord Update Notification
 
-on:
-  push:
-    paths:
-      - 'update-manifest.json'
-    branches:
-      - main
+  on:
+    push:
+      paths:
+        - 'update-manifest.json'
+      branches:
+        - main
 
-jobs:
-  notify:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+  jobs:
+    notify:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
 
-      - name: Read manifest and send Discord notification
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-        run: |
-          # Read the manifest
-          VERSION=$(jq -r '.version' update-manifest.json)
-          RELEASE_DATE=$(jq -r '.releaseDate' update-manifest.json)
-          IS_CRITICAL=$(jq -r '.isCritical' update-manifest.json)
-          DOWNLOAD_URL=$(jq -r '.downloadUrl' update-manifest.json)
+        - name: Read manifest and send Discord notification
+          env:
+            DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          run: |
+            VERSION=$(jq -r '.version' update-manifest.json)
+            RELEASE_DATE=$(jq -r '.releaseDate' update-manifest.json)
+            IS_CRITICAL=$(jq -r '.isCritical' update-manifest.json)
+            DOWNLOAD_URL=$(jq -r '.downloadUrl' update-manifest.json)
 
-          # Build changelog text
-          CHANGELOG=""
-          CHANGELOG_LENGTH=$(jq '.changelog | length' update-manifest.json)
+            CHANGELOG=""
+            CHANGELOG_LENGTH=$(jq '.changelog | length' update-manifest.json)
 
-          for i in $(seq 0 $(($CHANGELOG_LENGTH - 1))); do
-            TYPE=$(jq -r ".changelog[$i].type" update-manifest.json)
-            TEXT=$(jq -r ".changelog[$i].text" update-manifest.json)
+            for i in $(seq 0 $(($CHANGELOG_LENGTH - 1))); do
+              TYPE=$(jq -r ".changelog[$i].type" update-manifest.json)
+              TEXT=$(jq -r ".changelog[$i].text" update-manifest.json)
 
-            # Add emoji based on type
-            case $TYPE in
-              "security") EMOJI="🛡️" ;;
-              "feature") EMOJI="✨" ;;
-              "fix") EMOJI="🐛" ;;
-              "improvement") EMOJI="⚡" ;;
-              *) EMOJI="📝" ;;
-            esac
+              case $TYPE in
+                "security") EMOJI="🛡️" ;;
+                "feature") EMOJI="✨" ;;
+                "fix") EMOJI="🐛" ;;
+                "improvement") EMOJI="⚡" ;;
+                *) EMOJI="📝" ;;
+              esac
 
-            CHANGELOG="$CHANGELOG$EMOJI **[$TYPE]** $TEXT\\n"
-          done
+              CHANGELOG="$CHANGELOG$EMOJI **[$TYPE]** $TEXT\\n"
+            done
 
-          # Set color based on critical status
-          if [ "$IS_CRITICAL" = "true" ]; then
-            COLOR=15158332
-            CRITICAL_BANNER="\\n⚠️ **CRITICAL SECURITY UPDATE** ⚠️\\n_You should really update to keep your scripts safe!_\\n"
-          else
-            COLOR=5814783
-            CRITICAL_BANNER=""
-          fi
+            if [ "$IS_CRITICAL" = "true" ]; then
+              COLOR=15158332
+              CRITICAL_BANNER="⚠️ **CRITICAL SECURITY UPDATE** ⚠️\\n_You should really update to keep your scripts safe!_\\n\\n"
+            else
+              COLOR=5814783
+              CRITICAL_BANNER=""
+            fi
 
-          # Create Discord embed JSON
-          cat > payload.json << EOF
-          {
-            "embeds": [
-              {
-                "title": "🚀 EVON Obfuscator v${VERSION} Released!",
-                "description": "${CRITICAL_BANNER}\\n**📋 Changelog:**\\n${CHANGELOG}",
-                "color": ${COLOR},
-                "fields": [
-                  {
-                    "name": "📥 How to Update",
-                    "value": "• **Auto-Update:** Just open EVON and click 'Update Now'\\n• **Manual:** [Download Here](${DOWNLOAD_URL})",
-                    "inline": false
+            cat > payload.json << 'EOF'
+            {
+              "username": "EVON Updates",
+              "avatar_url": "https://raw.githubusercontent.com/Cosmic4796/evon-releases/main/icon.png",
+              "embeds": [
+                {
+                  "title": "🚀 EVON Obfuscator vVERSION_PLACEHOLDER Released!",
+                  "description": "CRITICAL_PLACEHOLDER📋 **Changelog:**\nCHANGELOG_PLACEHOLDER",
+                  "color": COLOR_PLACEHOLDER,
+                  "thumbnail": {
+                    "url": "https://raw.githubusercontent.com/Cosmic4796/evon-releases/main/icon.png"
                   },
-                  {
-                    "name": "📦 Version",
-                    "value": "v${VERSION}",
-                    "inline": true
-                  },
-                  {
-                    "name": "📅 Release Date",
-                    "value": "${RELEASE_DATE}",
-                    "inline": true
+                  "fields": [
+                    {
+                      "name": "📥 How to Update",
+                      "value": "• **Auto-Update:** Just open EVON and click 'Update Now'\n• **Manual:** [Download Here](DOWNLOAD_PLACEHOLDER)",
+                      "inline": false
+                    },
+                    {
+                      "name": "🏷️ Version",
+                      "value": "vVERSION_PLACEHOLDER",
+                      "inline": true
+                    },
+                    {
+                      "name": "📅 Release Date",
+                      "value": "DATE_PLACEHOLDER",
+                      "inline": true
+                    }
+                  ],
+                  "footer": {
+                    "text": "EVON Obfuscator • Automatic Update Available",
+                    "icon_url": "https://raw.githubusercontent.com/Cosmic4796/evon-releases/main/icon.png"
                   }
-                ],
-                "footer": {
-                  "text": "EVON Obfuscator • Automatic Update Available"
-                },
-                "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-              }
-            ]
-          }
-          EOF
+                }
+              ]
+            }
+            EOF
 
-          # Send to Discord
-          curl -H "Content-Type: application/json" -d @payload.json $DISCORD_WEBHOOK
+            sed -i "s|VERSION_PLACEHOLDER|$VERSION|g" payload.json
+            sed -i "s|CRITICAL_PLACEHOLDER|$CRITICAL_BANNER|g" payload.json
+            sed -i "s|CHANGELOG_PLACEHOLDER|$CHANGELOG|g" payload.json
+            sed -i "s|COLOR_PLACEHOLDER|$COLOR|g" payload.json
+            sed -i "s|DOWNLOAD_PLACEHOLDER|$DOWNLOAD_URL|g" payload.json
+            sed -i "s|DATE_PLACEHOLDER|$RELEASE_DATE|g" payload.json
 
-          echo "✅ Discord notification sent!"
+            curl -H "Content-Type: application/json" -d @payload.json $DISCORD_WEBHOOK
