@@ -1,12 +1,41 @@
-  {
-    "version": "1.0.0",
-    "releaseDate": "2025-02-13",
-    "isCritical": false,
-    "changelog": [
-      { "type": "feature", "text": "Initial release of EVON Obfuscator!" },
-      { "type": "feature", "text": "Monaco Editor with Lua/Luau syntax highlighting" },
-      { "type": "feature", "text": "3 obfuscation levels" },
-      { "type": "feature", "text": "Auto-update system" }
-    ],
-    "downloadUrl": "https://github.com/Cosmic4796/evon-releases/releases/download/v1.0.0/EVON.Obfuscator_1.0.0_x64-setup.exe"
-  }
+{
+  "version": "1.0.0",
+  "releaseDate": "2025-02-13",
+  "isCritical": false,
+  "changelog": [
+    {
+      "type": "feature",
+      "text": "Initial Release of EVON Obfuscator!"
+    },
+    {
+      "type": "feature",
+      "text": "Professional Monaco Editor with full Lua/Luau syntax highlighting"
+    },
+    {
+      "type": "feature",
+      "text": "3 Powerful Obfuscation Levels - Basic, Medium & Maximum protection"
+    },
+    {
+      "type": "feature",
+      "text": "Smart Project Management - Open entire folders with file tree navigation"
+    },
+    {
+      "type": "feature",
+      "text": "Beautiful Dark Theme with fully customizable colors"
+    },
+    {
+      "type": "feature",
+      "text": "Built-in Console for real-time obfuscation feedback"
+    },
+    {
+      "type": "feature",
+      "text": "Auto-Update System - Never miss an update!"
+    },
+    {
+      "type": "improvement",
+      "text": "Sleek, modern UI inspired by VS Code"
+    }
+  ],
+  "downloadUrl": "https://github.com/Cosmic4796/evon-releases/releases/download/v1.0.0/EVON.Obfuscator_1.0.0_x64-setup.exe",
+  "minVersion": "1.0.0"
+}
