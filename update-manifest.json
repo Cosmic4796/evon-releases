@@ -3,7 +3,7 @@
     "releaseDate": "2025-02-13",
     "isCritical": false,
     "changelog": [
-      { "type": "feature", "text": "Initial release of EVON Obfuscator" },
+      { "type": "feature", "text": "Initial release of EVON Obfuscator!" },
       { "type": "feature", "text": "Monaco Editor with Lua/Luau syntax highlighting" },
       { "type": "feature", "text": "3 obfuscation levels" },
       { "type": "feature", "text": "Auto-update system" }
